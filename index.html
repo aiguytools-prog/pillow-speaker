@@ -160,26 +160,6 @@
     border: none;
   }
 
-  /* Overlay to hide YouTube top bar (title, channel, logo, share) */
-  .yt-top-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 40px;
-    background: #0d1b2a;
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  /* Overlay to hide YouTube bottom bar */
-  .yt-bottom-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 40px;
-    background: #0d1b2a;
-    z-index: 5;
-    pointer-events: none;
-  }
-
   #unmute-btn {
     position: absolute;
     bottom: 16px;
@@ -413,8 +393,6 @@
   </div>
 
   <div class="video-wrap">
-    <div class="yt-top-overlay"></div>
-    <div class="yt-bottom-overlay"></div>
     <div id="yt-player"></div>
     <button id="unmute-btn" onclick="doUnmute()">
       <span id="unmute-icon">🔇</span>
@@ -439,7 +417,8 @@
           mute: 1,
           controls: 0,
           rel: 0,
-          modestbranding: 1
+          modestbranding: 1,
+          iv_load_policy: 3
         },
         events: {
           onReady: function(e) { e.target.playVideo(); }
