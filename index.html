@@ -340,19 +340,18 @@
   .features {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 40px;
   }
-  @media (max-width: 480px) {
-    .features { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .features .feat:nth-child(6) { grid-column: 1 / -1; }
+  @media (max-width: 380px) {
+    .features { gap: 8px; }
   }
 
   .feat {
     position: relative;
     text-align: center;
-    padding: 18px 12px 16px;
-    border-radius: 16px;
+    padding: 14px 8px 12px;
+    border-radius: 14px;
     background:
       linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
     border: 1px solid rgba(255,255,255,.06);
@@ -392,13 +391,13 @@
   }
 
   .feat .ico {
-    width: 26px; height: 26px;
-    margin: 0 auto 9px;
+    width: 20px; height: 20px;
+    margin: 0 auto 8px;
     color: var(--mint);
   }
-  .feat .ico svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .feat .ico svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 1.7; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .feat strong { display: block; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -.005em; margin-bottom: 3px; }
-  .feat span { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+  .feat span { font-size: 12px; color: var(--muted); line-height: 1.45; }
 
   /* ─────────────────────────────────────────────────────────────
      CTA
@@ -476,7 +475,8 @@
     background: color-mix(in srgb, currentColor 14%, transparent);
     border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
   }
-  .store-icon svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.7; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .store-icon svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 1.7; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .store-icon svg text { fill: currentColor; stroke: none; font-family: -apple-system, "Segoe UI Variable Display", "Segoe UI", Roboto, sans-serif; }
   .btn-text { min-width: 0; }
   .btn-text strong { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; letter-spacing: -.005em; }
   .btn-text small { display: block; font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -641,7 +641,13 @@
 
       <a href="https://www.amazon.com" target="_blank" rel="noopener" class="buy-btn btn-amazon">
         <span class="btn-left">
-          <span class="store-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M3 3h2l3 13h11l3-9H6"/></svg></span>
+          <span class="store-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 28">
+              <text x="16" y="17" text-anchor="middle" font-weight="800" font-size="15" letter-spacing="-.5">a</text>
+              <path d="M5 21 Q16 26 27 20" stroke-width="1.8"/>
+              <path d="M27 20 l-2.4 -.6 M27 20 l-.6 2.4" stroke-width="1.8"/>
+            </svg>
+          </span>
           <span class="btn-text">
             <strong>Buy on Amazon</strong>
             <small>Fast shipping · Trusted reviews · $15–$45</small>
@@ -655,7 +661,11 @@
 
       <a href="https://www.temu.com" target="_blank" rel="noopener" class="buy-btn btn-temu">
         <span class="btn-left">
-          <span class="store-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/></svg></span>
+          <span class="store-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 28">
+              <text x="16" y="19" text-anchor="middle" font-weight="900" font-size="13" letter-spacing="-.8">temu</text>
+            </svg>
+          </span>
           <span class="btn-text">
             <strong>Buy on Temu</strong>
             <small>Lowest price · Free shipping · $5–$15</small>
@@ -669,7 +679,11 @@
 
       <a href="https://www.aliexpress.com" target="_blank" rel="noopener" class="buy-btn btn-ali">
         <span class="btn-left">
-          <span class="store-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14 14 0 0 1 0 20M12 2a14 14 0 0 0 0 20"/></svg></span>
+          <span class="store-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 28">
+              <text x="16" y="19" text-anchor="middle" font-weight="900" font-size="13" letter-spacing="-.4">Ali</text>
+            </svg>
+          </span>
           <span class="btn-text">
             <strong>Buy on AliExpress</strong>
             <small>Ships worldwide · Multiple sellers · $6–$18</small>
