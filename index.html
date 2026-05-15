@@ -5,21 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sleep Better Tonight — The Pillow Speaker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --navy:   #0d1b2a;
-    --deep:   #111d2e;
     --card:   #162030;
     --accent: #7ee8c8;
-    --gold:   #f5c842;
     --soft:   #a8bdd4;
     --white:  #f0f4f8;
     --amazon: #ff9900;
     --temu:   #ff4747;
     --ali:    #e8192c;
+
+    /* Emil: custom easing curves — never use built-in easings */
+    --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   }
 
   html { scroll-behavior: smooth; }
@@ -33,7 +35,7 @@
     overflow-x: hidden;
   }
 
-  /* ── STARS BACKGROUND ── */
+  /* ── STARS ── */
   body::before {
     content: '';
     position: fixed;
@@ -57,10 +59,8 @@
   body::after {
     content: '';
     position: fixed;
-    top: -120px;
-    right: -100px;
-    width: 420px;
-    height: 420px;
+    top: -120px; right: -100px;
+    width: 420px; height: 420px;
     background: radial-gradient(circle, rgba(126,232,200,.12) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
@@ -78,7 +78,8 @@
   header {
     text-align: center;
     padding: 52px 0 32px;
-    animation: fadeUp .7s ease both;
+    /* Emil: enter from scale(0.95)+opacity, not raw translateY */
+    animation: enterUp 600ms var(--ease-out) both;
   }
 
   .eyebrow {
@@ -92,6 +93,13 @@
     border-radius: 20px;
     padding: 5px 16px;
     margin-bottom: 20px;
+    /* Emil: subtle shimmer draws attention without being annoying */
+    animation: enterUp 600ms var(--ease-out) both, shimmer 3s 1.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes shimmer {
+    from { box-shadow: 0 0 0px rgba(126,232,200,0); }
+    to   { box-shadow: 0 0 12px rgba(126,232,200,.35); }
   }
 
   h1 {
@@ -102,10 +110,7 @@
     margin-bottom: 16px;
   }
 
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--accent); }
 
   .sub {
     font-size: 15px;
@@ -115,14 +120,14 @@
     margin: 0 auto;
   }
 
-  /* ── SOCIAL PROOF ── */
+  /* ── PROOF BAR ── */
   .proof-bar {
     display: flex;
     justify-content: center;
     gap: 28px;
     flex-wrap: wrap;
     margin: 28px 0 36px;
-    animation: fadeUp .7s .1s ease both;
+    animation: enterUp 600ms 80ms var(--ease-out) both;
   }
 
   .proof-item {
@@ -142,8 +147,8 @@
     overflow: hidden;
     box-shadow: 0 0 60px rgba(126,232,200,.12), 0 20px 60px rgba(0,0,0,.5);
     margin-bottom: 40px;
-    animation: fadeUp .7s .2s ease both;
     border: 1px solid rgba(126,232,200,.15);
+    animation: enterUp 600ms 160ms var(--ease-out) both;
   }
 
   .video-wrap::before {
@@ -160,6 +165,7 @@
     border: none;
   }
 
+  /* ── UNMUTE BUTTON ── */
   #unmute-btn {
     position: absolute;
     bottom: 16px;
@@ -169,7 +175,7 @@
     align-items: center;
     gap: 8px;
     background: rgba(0,0,0,.65);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 30px;
     padding: 10px 20px;
@@ -179,23 +185,33 @@
     font-weight: 500;
     cursor: pointer;
     z-index: 10;
-    transition: background .2s, transform .2s, opacity .3s;
+    /* Emil: specify exact properties, not transition:all */
+    transition: background 150ms var(--ease-out),
+                opacity 250ms var(--ease-out);
   }
 
-  #unmute-btn:hover {
-    background: rgba(0,0,0,.85);
-    transform: translateX(-50%) scale(1.05);
+  /* Emil: gate hover behind media query — touch devices falsely trigger hover */
+  @media (hover: hover) and (pointer: fine) {
+    #unmute-btn:hover {
+      background: rgba(0,0,0,.85);
+    }
+  }
+
+  /* Emil: :active scale gives tactile press feedback — 100-160ms */
+  #unmute-btn:active {
+    transform: translateX(-50%) scale(0.96);
+    transition: transform 100ms var(--ease-out),
+                background 150ms var(--ease-out);
   }
 
   #unmute-icon { font-size: 18px; }
 
-  /* ── FEATURES ── */
+  /* ── FEATURES — staggered entrance ── */
   .features {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-bottom: 40px;
-    animation: fadeUp .7s .3s ease both;
   }
 
   @media (max-width: 480px) {
@@ -203,21 +219,42 @@
     .features .feat:last-child { grid-column: 1 / -1; }
   }
 
+  /* Emil: stagger 50ms between items — feels cascading, not mechanical */
   .feat {
     background: var(--card);
     border: 1px solid rgba(126,232,200,.1);
     border-radius: 14px;
     padding: 18px 14px;
     text-align: center;
+    opacity: 0;
+    transform: scale(0.95);
+    animation: enterScale 500ms var(--ease-out) both;
+    /* Emil: transition exact props only */
+    transition: border-color 200ms var(--ease-out),
+                box-shadow 200ms var(--ease-out);
+  }
+
+  .feat:nth-child(1) { animation-delay: 240ms; }
+  .feat:nth-child(2) { animation-delay: 290ms; }
+  .feat:nth-child(3) { animation-delay: 340ms; }
+  .feat:nth-child(4) { animation-delay: 390ms; }
+  .feat:nth-child(5) { animation-delay: 440ms; }
+  .feat:nth-child(6) { animation-delay: 490ms; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .feat:hover {
+      border-color: rgba(126,232,200,.28);
+      box-shadow: 0 4px 24px rgba(126,232,200,.08);
+    }
   }
 
   .feat .emoji { font-size: 26px; margin-bottom: 8px; display: block; }
   .feat strong { display: block; font-size: 12px; font-weight: 500; color: var(--white); margin-bottom: 4px; letter-spacing: .04em; }
   .feat span { font-size: 11px; color: var(--soft); line-height: 1.5; }
 
-  /* ── CTA SECTION ── */
+  /* ── CTA ── */
   .cta-section {
-    animation: fadeUp .7s .4s ease both;
+    animation: enterUp 600ms 520ms var(--ease-out) both;
   }
 
   .cta-label {
@@ -241,61 +278,67 @@
     padding: 18px 24px;
     border-radius: 14px;
     text-decoration: none;
-    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
     position: relative;
     overflow: hidden;
+    /* Emil: specify exact properties */
+    transition: transform 200ms var(--ease-out),
+                box-shadow 200ms var(--ease-out);
   }
 
   .buy-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,.06);
+    background: rgba(255,255,255,.05);
     opacity: 0;
-    transition: opacity .2s;
+    transition: opacity 150ms var(--ease-out);
   }
 
-  .buy-btn:hover { transform: translateY(-3px); }
-  .buy-btn:hover::before { opacity: 1; }
-  .buy-btn:active { transform: translateY(0); }
+  @media (hover: hover) and (pointer: fine) {
+    .buy-btn:hover { transform: translateY(-3px); }
+    .buy-btn:hover::before { opacity: 1; }
+    .btn-amazon:hover { box-shadow: 0 10px 40px rgba(255,153,0,.28); }
+    .btn-temu:hover   { box-shadow: 0 10px 40px rgba(255,71,71,.25); }
+    .btn-ali:hover    { box-shadow: 0 10px 40px rgba(232,25,44,.22); }
+    .buy-btn:hover .arrow {
+      transform: translateX(5px);
+      color: var(--white);
+    }
+  }
 
-  /* Amazon */
+  /* Emil: press feedback — scale down slightly, snap back fast */
+  .buy-btn:active {
+    transform: scale(0.97);
+    transition: transform 100ms var(--ease-out);
+  }
+
   .btn-amazon {
     background: linear-gradient(135deg, #1a1200, #2e1f00);
     border: 1.5px solid rgba(255,153,0,.4);
     box-shadow: 0 4px 30px rgba(255,153,0,.15);
   }
-  .btn-amazon:hover { box-shadow: 0 8px 40px rgba(255,153,0,.28); }
   .btn-amazon .badge { background: var(--amazon); }
 
-  /* Temu */
   .btn-temu {
     background: linear-gradient(135deg, #1a0000, #2e0606);
     border: 1.5px solid rgba(255,71,71,.35);
     box-shadow: 0 4px 30px rgba(255,71,71,.12);
   }
-  .btn-temu:hover { box-shadow: 0 8px 40px rgba(255,71,71,.25); }
   .btn-temu .badge { background: var(--temu); }
 
-  /* AliExpress */
   .btn-ali {
     background: linear-gradient(135deg, #1a0002, #280005);
     border: 1.5px solid rgba(232,25,44,.3);
     box-shadow: 0 4px 30px rgba(232,25,44,.1);
   }
-  .btn-ali:hover { box-shadow: 0 8px 40px rgba(232,25,44,.22); }
   .btn-ali .badge { background: var(--ali); }
 
-  /* Button internals */
   .btn-left { display: flex; align-items: center; gap: 14px; }
 
   .store-icon {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 20px;
     flex-shrink: 0;
   }
@@ -304,24 +347,13 @@
   .btn-temu   .store-icon { background: rgba(255,71,71,.15); }
   .btn-ali    .store-icon { background: rgba(232,25,44,.15); }
 
-  .btn-text strong {
-    display: block;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 3px;
-  }
-
-  .btn-text small {
-    font-size: 12px;
-    color: var(--soft);
-  }
+  .btn-text strong { display: block; font-size: 15px; font-weight: 500; color: var(--white); margin-bottom: 3px; }
+  .btn-text small  { font-size: 12px; color: var(--soft); }
 
   .btn-right { display: flex; align-items: center; gap: 10px; }
 
   .badge {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 11px; font-weight: 500;
     padding: 4px 10px;
     border-radius: 20px;
     color: #fff;
@@ -331,23 +363,10 @@
   .arrow {
     color: var(--soft);
     font-size: 18px;
-    transition: transform .2s, color .2s;
+    /* Emil: specify exact properties */
+    transition: transform 200ms var(--ease-out),
+                color 200ms var(--ease-out);
   }
-
-  .buy-btn:hover .arrow { transform: translateX(4px); color: var(--white); }
-
-  /* ── DISCLAIMER ── */
-  .disclaimer {
-    text-align: center;
-    font-size: 11px;
-    color: rgba(168,189,212,.45);
-    margin-top: 32px;
-    line-height: 1.7;
-    animation: fadeUp .7s .5s ease both;
-  }
-
-  .disclaimer a { color: rgba(126,232,200,.5); text-decoration: none; }
-  .disclaimer a:hover { color: var(--accent); }
 
   /* ── MOON BADGE ── */
   .moon-badge {
@@ -358,22 +377,45 @@
     font-size: 12px;
     color: var(--soft);
     margin: 32px 0 0;
-    animation: fadeUp .7s .6s ease both;
+    animation: enterUp 600ms 580ms var(--ease-out) both;
   }
 
   .moon-badge::before,
   .moon-badge::after {
     content: '';
-    height: 1px;
-    width: 60px;
+    height: 1px; width: 60px;
     background: linear-gradient(to right, transparent, rgba(168,189,212,.3));
   }
   .moon-badge::after { transform: scaleX(-1); }
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(22px); }
-    to   { opacity: 1; transform: translateY(0); }
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(168,189,212,.45);
+    margin-top: 24px;
+    line-height: 1.7;
+    animation: enterUp 600ms 620ms var(--ease-out) both;
+  }
+
+  /* ── KEYFRAMES ── */
+  /* Emil: enter from scale(0.95)+opacity — nothing appears from nothing */
+  @keyframes enterUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes enterScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Emil: respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 </style>
 </head>
