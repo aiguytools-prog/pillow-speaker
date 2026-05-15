@@ -160,6 +160,35 @@
     border: none;
   }
 
+  #unmute-btn {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 30px;
+    padding: 10px 20px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 10;
+    transition: background .2s, transform .2s;
+  }
+
+  #unmute-btn:hover {
+    background: rgba(0,0,0,.85);
+    transform: translateX(-50%) scale(1.05);
+  }
+
+  #unmute-icon { font-size: 18px; }
+
   /* ── FEATURES ── */
   .features {
     display: grid;
@@ -363,10 +392,37 @@
     <div class="proof-item"><span class="icon">⏱️</span> Auto-off sleep timer</div>
   </div>
 
-  <!-- VIDEO — replace YOUR_VIDEO_ID with your YouTube video ID -->
   <div class="video-wrap">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/14WVYUzvPaA?si=XghdzSS1lGWKhGEU&amp;controls=0&amp;autoplay=1&amp;mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe id="yt-iframe" width="560" height="315"
+      src="https://www.youtube.com/embed/14WVYUzvPaA?si=XghdzSS1lGWKhGEU&amp;controls=0&amp;autoplay=1&amp;mute=1&amp;enablejsapi=1"
+      title="YouTube video player" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <button id="unmute-btn" onclick="unmuteVideo()">
+      <span id="unmute-icon">🔇</span>
+      <span id="unmute-text">Tap to unmute</span>
+    </button>
   </div>
+
+  <script>
+    var muted = true;
+    function unmuteVideo() {
+      var iframe = document.getElementById('yt-iframe');
+      var icon   = document.getElementById('unmute-icon');
+      var text   = document.getElementById('unmute-text');
+      if (muted) {
+        iframe.src = iframe.src.replace('&amp;mute=1', '&amp;mute=0');
+        icon.textContent = '🔊';
+        text.textContent = 'Mute';
+        muted = false;
+      } else {
+        iframe.src = iframe.src.replace('&amp;mute=0', '&amp;mute=1');
+        icon.textContent = '🔇';
+        text.textContent = 'Tap to unmute';
+        muted = true;
+      }
+    }
+  </script>
 
   <div class="features">
     <div class="feat">
