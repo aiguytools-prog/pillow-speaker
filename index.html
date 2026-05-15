@@ -712,11 +712,33 @@
 </div>
 
 <script>
-/* ─────────────────────────────────────────────────────────────
-   Video facade — defer YouTube until idle or first interaction.
-   Saves ~150KB of JS on first paint and pleases Lighthouse.
-   ───────────────────────────────────────────────────────────── */
 (function () {
+  /* ─────────────────────────────────────────────────────────────
+     GA4 — gtag stub immediately, library lazy-loaded after idle.
+     Events queue safely against the stub and fire when the lib lands.
+     ───────────────────────────────────────────────────────────── */
+  var GA_ID = 'G-WM5746JXYW';
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', GA_ID);
+
+  function loadGtagLib() {
+    var s = document.createElement('script');
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadGtagLib, { timeout: 3000 });
+  } else {
+    setTimeout(loadGtagLib, 2000);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Video facade — defer YouTube until idle or first interaction.
+     Saves ~150KB of JS on first paint and pleases Lighthouse.
+     ───────────────────────────────────────────────────────────── */
   var VIDEO_ID = '14WVYUzvPaA';
   var vw   = document.getElementById('vw');
   var btn  = document.getElementById('unmute');
@@ -730,7 +752,6 @@
     iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
     iframe.allowFullscreen = true;
     iframe.title = 'Pillow Speaker — demo';
-    // youtube-nocookie + enablejsapi for postMessage control
     iframe.src =
       'https://www.youtube-nocookie.com/embed/' + VIDEO_ID +
       '?autoplay=1' +
@@ -739,6 +760,9 @@
       '&enablejsapi=1&playlist=' + VIDEO_ID + '&loop=1';
     vw.appendChild(iframe);
     vw.classList.add('is-playing');
+    gtag('event', 'video_loaded', {
+      load_method: autoplayWithSound ? 'user_click' : 'idle'
+    });
   }
 
   function postMsg(func, args) {
@@ -751,7 +775,6 @@
 
   function unmute() {
     if (!loaded) {
-      // First tap before idle-load: build iframe already unmuted
       buildIframe(true);
     } else {
       postMsg('unMute');
@@ -759,19 +782,49 @@
       postMsg('playVideo');
     }
     btn.classList.add('is-hidden');
+    gtag('event', 'unmute_click');
   }
 
   btn.addEventListener('click', unmute);
 
-  // Idle-load the iframe muted, so by the time the user is engaged,
-  // motion is already happening behind the unmute CTA.
   function idleLoad() { buildIframe(false); }
-
   if ('requestIdleCallback' in window) {
     requestIdleCallback(idleLoad, { timeout: 1500 });
   } else {
     setTimeout(idleLoad, 1200);
   }
+
+  /* Store click tracking — fires before the new tab opens. */
+  document.querySelectorAll('.buy-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var store = b.classList.contains('btn-amazon')  ? 'amazon'
+                : b.classList.contains('btn-temu')    ? 'temu'
+                : b.classList.contains('btn-ali')     ? 'aliexpress'
+                : 'unknown';
+      gtag('event', 'store_click', { store: store, link_url: b.href });
+    });
+  });
+
+  /* Scroll depth — 25/50/75/100 milestones, rAF-throttled. */
+  var seen = {}, ticking = false;
+  var milestones = [25, 50, 75, 100];
+  function checkScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max > 0) {
+      var pct = Math.min(100, Math.round((window.scrollY / max) * 100));
+      for (var i = 0; i < milestones.length; i++) {
+        var m = milestones[i];
+        if (pct >= m && !seen[m]) {
+          seen[m] = true;
+          gtag('event', 'scroll_depth', { percent: m });
+        }
+      }
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { requestAnimationFrame(checkScroll); ticking = true; }
+  }, { passive: true });
 })();
 </script>
 
