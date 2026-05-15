@@ -160,6 +160,26 @@
     border: none;
   }
 
+  /* Overlay to hide YouTube top bar (title, channel, logo, share) */
+  .yt-top-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40px;
+    background: #0d1b2a;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* Overlay to hide YouTube bottom bar */
+  .yt-bottom-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: #0d1b2a;
+    z-index: 5;
+    pointer-events: none;
+  }
+
   #unmute-btn {
     position: absolute;
     bottom: 16px;
@@ -179,7 +199,7 @@
     font-weight: 500;
     cursor: pointer;
     z-index: 10;
-    transition: background .2s, transform .2s;
+    transition: background .2s, transform .2s, opacity .3s;
   }
 
   #unmute-btn:hover {
@@ -393,8 +413,10 @@
   </div>
 
   <div class="video-wrap">
+    <div class="yt-top-overlay"></div>
+    <div class="yt-bottom-overlay"></div>
     <div id="yt-player"></div>
-    <button id="unmute-btn" onclick="toggleMute()">
+    <button id="unmute-btn" onclick="doUnmute()">
       <span id="unmute-icon">🔇</span>
       <span id="unmute-text">Tap to unmute</span>
     </button>
@@ -402,14 +424,11 @@
 
   <script>
     var player;
-    var muted = true;
 
-    // Load YouTube IFrame API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
 
-    // Called automatically by YouTube API when ready
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
         width: '100%',
@@ -428,22 +447,13 @@
       });
     }
 
-    function toggleMute() {
+    function doUnmute() {
       if (!player) return;
-      var icon = document.getElementById('unmute-icon');
-      var text = document.getElementById('unmute-text');
-      if (muted) {
-        player.unMute();
-        player.setVolume(100);
-        icon.textContent = '🔊';
-        text.textContent = 'Mute';
-        muted = false;
-      } else {
-        player.mute();
-        icon.textContent = '🔇';
-        text.textContent = 'Tap to unmute';
-        muted = true;
-      }
+      player.unMute();
+      player.setVolume(100);
+      var btn = document.getElementById('unmute-btn');
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
     }
   </script>
 
