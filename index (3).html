@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Better Tonight — The Pillow Speaker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0d1b2a;
+    --deep:   #111d2e;
+    --card:   #162030;
+    --accent: #7ee8c8;
+    --gold:   #f5c842;
+    --soft:   #a8bdd4;
+    --white:  #f0f4f8;
+    --amazon: #ff9900;
+    --temu:   #ff4747;
+    --ali:    #e8192c;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── STARS BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.55) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 45%, rgba(255,255,255,.35) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,.45) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 82% 75%, rgba(255,255,255,.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 40%, rgba(255,255,255,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 70%, rgba(255,255,255,.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── MOON GLOW ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -120px;
+    right: -100px;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(126,232,200,.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 52px 0 32px;
+    animation: fadeUp .7s ease both;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(126,232,200,.3);
+    border-radius: 20px;
+    padding: 5px 16px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .sub {
+    font-size: 15px;
+    color: var(--soft);
+    line-height: 1.65;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── SOCIAL PROOF ── */
+  .proof-bar {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin: 28px 0 36px;
+    animation: fadeUp .7s .1s ease both;
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--soft);
+  }
+
+  .proof-item .icon { font-size: 16px; }
+
+  /* ── VIDEO ── */
+  .video-wrap {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(126,232,200,.12), 0 20px 60px rgba(0,0,0,.5);
+    margin-bottom: 40px;
+    animation: fadeUp .7s .2s ease both;
+    border: 1px solid rgba(126,232,200,.15);
+  }
+
+  .video-wrap::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%;
+  }
+
+  .video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* ── FEATURES ── */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 40px;
+    animation: fadeUp .7s .3s ease both;
+  }
+
+  @media (max-width: 480px) {
+    .features { grid-template-columns: 1fr 1fr; }
+    .features .feat:last-child { grid-column: 1 / -1; }
+  }
+
+  .feat {
+    background: var(--card);
+    border: 1px solid rgba(126,232,200,.1);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+
+  .feat .emoji { font-size: 26px; margin-bottom: 8px; display: block; }
+  .feat strong { display: block; font-size: 12px; font-weight: 500; color: var(--white); margin-bottom: 4px; letter-spacing: .04em; }
+  .feat span { font-size: 11px; color: var(--soft); line-height: 1.5; }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    animation: fadeUp .7s .4s ease both;
+  }
+
+  .cta-label {
+    text-align: center;
+    font-size: 13px;
+    color: var(--soft);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .cta-label span { color: var(--accent); }
+
+  /* ── BUY BUTTONS ── */
+  .buy-buttons { display: flex; flex-direction: column; gap: 14px; }
+
+  .buy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .buy-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,.06);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .buy-btn:hover { transform: translateY(-3px); }
+  .buy-btn:hover::before { opacity: 1; }
+  .buy-btn:active { transform: translateY(0); }
+
+  /* Amazon */
+  .btn-amazon {
+    background: linear-gradient(135deg, #1a1200, #2e1f00);
+    border: 1.5px solid rgba(255,153,0,.4);
+    box-shadow: 0 4px 30px rgba(255,153,0,.15);
+  }
+  .btn-amazon:hover { box-shadow: 0 8px 40px rgba(255,153,0,.28); }
+  .btn-amazon .badge { background: var(--amazon); }
+
+  /* Temu */
+  .btn-temu {
+    background: linear-gradient(135deg, #1a0000, #2e0606);
+    border: 1.5px solid rgba(255,71,71,.35);
+    box-shadow: 0 4px 30px rgba(255,71,71,.12);
+  }
+  .btn-temu:hover { box-shadow: 0 8px 40px rgba(255,71,71,.25); }
+  .btn-temu .badge { background: var(--temu); }
+
+  /* AliExpress */
+  .btn-ali {
+    background: linear-gradient(135deg, #1a0002, #280005);
+    border: 1.5px solid rgba(232,25,44,.3);
+    box-shadow: 0 4px 30px rgba(232,25,44,.1);
+  }
+  .btn-ali:hover { box-shadow: 0 8px 40px rgba(232,25,44,.22); }
+  .btn-ali .badge { background: var(--ali); }
+
+  /* Button internals */
+  .btn-left { display: flex; align-items: center; gap: 14px; }
+
+  .store-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .btn-amazon .store-icon { background: rgba(255,153,0,.15); }
+  .btn-temu   .store-icon { background: rgba(255,71,71,.15); }
+  .btn-ali    .store-icon { background: rgba(232,25,44,.15); }
+
+  .btn-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+
+  .btn-text small {
+    font-size: 12px;
+    color: var(--soft);
+  }
+
+  .btn-right { display: flex; align-items: center; gap: 10px; }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    color: var(--soft);
+    font-size: 18px;
+    transition: transform .2s, color .2s;
+  }
+
+  .buy-btn:hover .arrow { transform: translateX(4px); color: var(--white); }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(168,189,212,.45);
+    margin-top: 32px;
+    line-height: 1.7;
+    animation: fadeUp .7s .5s ease both;
+  }
+
+  .disclaimer a { color: rgba(126,232,200,.5); text-decoration: none; }
+  .disclaimer a:hover { color: var(--accent); }
+
+  /* ── MOON BADGE ── */
+  .moon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--soft);
+    margin: 32px 0 0;
+    animation: fadeUp .7s .6s ease both;
+  }
+
+  .moon-badge::before,
+  .moon-badge::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(to right, transparent, rgba(168,189,212,.3));
+  }
+  .moon-badge::after { transform: scaleX(-1); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">✦ Sleep Technology</div>
+    <h1>Listen at night.<br><em>Disturb no one.</em></h1>
+    <p class="sub">The ultra-thin pillow speaker that sits under your pillow — so you hear every word, and your partner hears nothing.</p>
+  </header>
+
+  <div class="proof-bar">
+    <div class="proof-item"><span class="icon">🌙</span> Side-sleeper friendly</div>
+    <div class="proof-item"><span class="icon">🦴</span> Bone conduction sound</div>
+    <div class="proof-item"><span class="icon">⏱️</span> Auto-off sleep timer</div>
+  </div>
+
+  <!-- VIDEO — replace YOUR_VIDEO_ID with your YouTube video ID -->
+  <div class="video-wrap">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/14WVYUzvPaA?si=LhTvdLni643O2jtY&amp;controls=0&amp;start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <span class="emoji">😴</span>
+      <strong>No Earbuds</strong>
+      <span>Zero ear pain, even for side sleepers</span>
+    </div>
+    <div class="feat">
+      <span class="emoji">🤫</span>
+      <strong>Private Audio</strong>
+      <span>Only you can hear it</span>
+    </div>
+    <div class="feat">
+      <span class="emoji">🎵</span>
+      <strong>White Noise</strong>
+      <span>Built-in sleep sounds & timer</span>
+    </div>
+    <div class="feat">
+      <span class="emoji">📱</span>
+      <strong>Bluetooth 5.0+</strong>
+      <span>Pairs with any phone instantly</span>
+    </div>
+    <div class="feat">
+      <span class="emoji">🔋</span>
+      <strong>All Night</strong>
+      <span>Up to 10–16h battery life</span>
+    </div>
+    <div class="feat">
+      <span class="emoji">🎁</span>
+      <strong>Great Gift</strong>
+      <span>For light sleepers & couples</span>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <p class="cta-label">Choose your store — <span>all ship worldwide</span></p>
+
+    <div class="buy-buttons">
+
+      <!-- AMAZON — replace href with your affiliate link -->
+      <a href="https://www.amazon.com" target="_blank" rel="noopener" class="buy-btn btn-amazon">
+        <div class="btn-left">
+          <div class="store-icon">🛒</div>
+          <div class="btn-text">
+            <strong>Buy on Amazon</strong>
+            <small>Fast shipping · Trusted reviews · $15–$45</small>
+          </div>
+        </div>
+        <div class="btn-right">
+          <span class="badge">Best Quality</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- TEMU — replace href with your affiliate link -->
+      <a href="https://www.temu.com" target="_blank" rel="noopener" class="buy-btn btn-temu">
+        <div class="btn-left">
+          <div class="store-icon">💸</div>
+          <div class="btn-text">
+            <strong>Buy on Temu</strong>
+            <small>Lowest price · Free shipping · $5–$15</small>
+          </div>
+        </div>
+        <div class="btn-right">
+          <span class="badge">Best Price</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+      <!-- ALIEXPRESS — replace href with your affiliate link -->
+      <a href="https://www.aliexpress.com" target="_blank" rel="noopener" class="buy-btn btn-ali">
+        <div class="btn-left">
+          <div class="store-icon">🌍</div>
+          <div class="btn-text">
+            <strong>Buy on AliExpress</strong>
+            <small>Ships worldwide · Multiple sellers · $6–$18</small>
+          </div>
+        </div>
+        <div class="btn-right">
+          <span class="badge">International</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="moon-badge">🌙 Sleep smarter tonight</div>
+
+  <p class="disclaimer">
+    This page contains affiliate links. We may earn a small commission if you purchase through these links — at no extra cost to you.<br>
+    Prices shown are approximate and may vary by region and seller.
+  </p>
+
+</div>
+</body>
+</html>
